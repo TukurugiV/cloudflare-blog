@@ -1,7 +1,7 @@
 ---
 title: "拡張Markdown記法の総合ガイド"
 category: ["マークダウン", "チュートリアル", "技術"]
-release: "2025-05-21T15:00:00.000Z"
+release: "2025-05-20T15:00:00.000Z"
 excerpt: "このブログで使用できるすべての拡張Markdown記法の使い方を解説します"
 coverImage: "/images/markdown-complete-guide.jpg"
 ---
