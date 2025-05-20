@@ -98,10 +98,10 @@ $$
 複数の画像をスライダーとして表示できます。
 
 :::slider
-![春の風景](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/805a81d8-67ad-4542-dc3e-d06cf683cf00/large)
+![春の風景](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/805a81d8-67ad-4542-dc3e-d06cf683cf00/medium)
 ![夏の風景](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/b3e1a157-7aef-4ef1-d323-72928c5aa300/medium)
-![秋の風景](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/9087e14a-f525-4a70-fa00-f3d02816ed00/thumbnail)
-![冬の風景](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/b5cfedba-6160-4f60-218f-10a2d6722800/large)
+![秋の風景](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/9087e14a-f525-4a70-fa00-f3d02816ed00/medium)
+![冬の風景](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/b5cfedba-6160-4f60-218f-10a2d6722800/medium)
 :::
 
 ## 6. コードブロックとシンタックスハイライト
