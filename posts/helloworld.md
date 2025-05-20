@@ -6,4 +6,4 @@ excerpt: "この記事の要約や簡単な説明文をここに記載します�
 coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/-2024-03-05-130918-1747749012050/public"
 ---
 
-![](./S1.png)
+![](images/S1.png)
