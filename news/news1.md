@@ -3,6 +3,8 @@ title: "news"
 category: ["お知らせ"]
 release: "2025-05-20T19:30:22.650Z"
 excerpt: "お知らせ"
+cover:https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/d50b300c-9ea8-4d11-f33c-539f0e72eb00/large
 ---
 
 # お知らせです
+![](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/d50b300c-9ea8-4d11-f33c-539f0e72eb00/large)
