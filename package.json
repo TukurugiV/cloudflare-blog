@@ -1,0 +1,41 @@
+{
+    "name": "md-cloudflare-processor",
+    "version": "1.0.0",
+    "description": "Markdownファイル内のローカル画像をCloudflare Imagesにアップロードし、JSONファイルを生成するツール",
+    "main": "md-cloudflare-processor.js",
+    "bin": {
+      "md-cloudflare-processor": "./md-cloudflare-processor.js"
+    },
+    "scripts": {
+      "process": "node md-cloudflare-processor.js -i ./",
+      "process:images-only": "node md-cloudflare-processor.js -i ./ --skip-json",
+      "process:json-only": "node md-cloudflare-processor.js -i ./ --skip-images",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+      "markdown",
+      "cloudflare",
+      "images",
+      "processor",
+      "json",
+      "generator"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "dependencies": {
+      "node-fetch": "^2.6.7",
+      "form-data": "^4.0.0",
+      "dotenv": "^16.0.3"
+    },
+    "engines": {
+      "node": ">=14.0.0"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/yourusername/md-cloudflare-processor.git"
+    },
+    "bugs": {
+      "url": "https://github.com/yourusername/md-cloudflare-processor/issues"
+    },
+    "homepage": "https://github.com/yourusername/md-cloudflare-processor#readme"
+  }

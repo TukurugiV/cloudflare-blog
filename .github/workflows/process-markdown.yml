@@ -1,0 +1,110 @@
+name: Process Markdown Files
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'posts/**/*.md'
+      - 'events/**/*.md'
+      - 'news/**/*.md'
+      - '**/*.md'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'posts/**/*.md'
+      - 'events/**/*.md'
+      - 'news/**/*.md'
+      - '**/*.md'
+  workflow_dispatch: # 手動実行を許可
+
+jobs:
+  process-markdown:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Check for Markdown changes
+      id: check_changes
+      run: |
+        # Markdownファイルに変更があるかチェック
+        if git diff --name-only HEAD~1 HEAD | grep -E '\.(md)$'; then
+          echo "markdown_changed=true" >> $GITHUB_OUTPUT
+          echo "Markdown files have been changed"
+        else
+          echo "markdown_changed=false" >> $GITHUB_OUTPUT
+          echo "No Markdown files changed"
+        fi
+
+    - name: Process Markdown files
+      if: steps.check_changes.outputs.markdown_changed == 'true'
+      env:
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      run: |
+        echo "Processing Markdown files..."
+        node md-cloudflare-processor.js -i ./
+
+    - name: Check for processed changes
+      id: check_processed
+      if: steps.check_changes.outputs.markdown_changed == 'true'
+      run: |
+        # 処理後にファイルに変更があるかチェック
+        if git diff --quiet; then
+          echo "files_changed=false" >> $GITHUB_OUTPUT
+          echo "No files were modified during processing"
+        else
+          echo "files_changed=true" >> $GITHUB_OUTPUT
+          echo "Files were modified during processing"
+        fi
+
+    - name: Commit and push changes
+      if: steps.check_processed.outputs.files_changed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "🤖 Auto-process: Update images and generate JSON files
+        
+        - Uploaded local images to Cloudflare Images
+        - Updated image URLs in Markdown files  
+        - Generated/updated JSON metadata files
+        
+        [skip ci]"
+        git push
+
+    - name: Create summary
+      if: always()
+      run: |
+        echo "## 📋 Processing Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "${{ steps.check_changes.outputs.markdown_changed }}" = "true" ]; then
+          echo "✅ Markdown files detected and processed" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.check_processed.outputs.files_changed }}" = "true" ]; then
+            echo "✅ Files were updated and committed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Changes made:" >> $GITHUB_STEP_SUMMARY
+            echo "- 🖼️ Local images uploaded to Cloudflare Images" >> $GITHUB_STEP_SUMMARY
+            echo "- 🔗 Image URLs updated in Markdown files" >> $GITHUB_STEP_SUMMARY
+            echo "- 📄 JSON metadata files generated/updated" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes were needed" >> $GITHUB_STEP_SUMMARY
+          fi
+        else
+          echo "ℹ️ No Markdown files were changed in this push" >> $GITHUB_STEP_SUMMARY
+        fi
