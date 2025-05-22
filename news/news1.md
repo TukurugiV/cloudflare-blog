@@ -6,5 +6,5 @@ excerpt: "お知らせ"
 coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/d50b300c-9ea8-4d11-f33c-539f0e72eb00/large"
 ---
 
-![](./xNa3VRiU_400x400.jpg)
+![](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/216e2dc7-378d-4148-39a0-f0a4801f0900/favIcon)
 
