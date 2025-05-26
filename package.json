@@ -1,41 +1,44 @@
 {
-    "name": "md-cloudflare-processor",
-    "version": "1.0.0",
-    "description": "Markdownファイル内のローカル画像をCloudflare Imagesにアップロードし、JSONファイルを生成するツール",
-    "main": "md-cloudflare-processor.js",
-    "bin": {
-      "md-cloudflare-processor": "./md-cloudflare-processor.js"
-    },
-    "scripts": {
-      "process": "node md-cloudflare-processor.js -i ./",
-      "process:images-only": "node md-cloudflare-processor.js -i ./ --skip-json",
-      "process:json-only": "node md-cloudflare-processor.js -i ./ --skip-images",
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [
-      "markdown",
-      "cloudflare",
-      "images",
-      "processor",
-      "json",
-      "generator"
-    ],
-    "author": "Your Name",
-    "license": "MIT",
-    "dependencies": {
-      "node-fetch": "^2.6.7",
-      "form-data": "^4.0.0",
-      "dotenv": "^16.0.3"
-    },
-    "engines": {
-      "node": ">=14.0.0"
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/yourusername/md-cloudflare-processor.git"
-    },
-    "bugs": {
-      "url": "https://github.com/yourusername/md-cloudflare-processor/issues"
-    },
-    "homepage": "https://github.com/yourusername/md-cloudflare-processor#readme"
-  }
+  "name": "md-cloudflare-processor",
+  "version": "1.1.0",
+  "description": "Markdownファイル内のローカル画像をCloudflare Imagesにアップロードし、JSONファイルを生成する統合ツール",
+  "main": "integrated-processor.js",
+  "bin": {
+    "md-cloudflare-processor": "./integrated-processor.js"
+  },
+  "scripts": {
+    "process": "node integrated-processor.js -i ./ -r",
+    "process:images-only": "node imgReplace.js -i ./ -r",
+    "process:json-only": "node genJson.js",
+    "process:legacy": "node imgReplace.js -i ./ -r && node genJson.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "markdown",
+    "cloudflare",
+    "images",
+    "processor",
+    "json",
+    "generator",
+    "integrated",
+    "duplicate-prevention"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "form-data": "^4.0.0",
+    "dotenv": "^16.0.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/md-cloudflare-processor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/md-cloudflare-processor/issues"
+  },
+  "homepage": "https://github.com/yourusername/md-cloudflare-processor#readme"
+}

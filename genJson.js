@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// フロントマターを解析する関数
+// フロントマターを解析する関数（改良版）
 function parseFrontMatter(content) {
   // フロントマターの境界を検出
   const frontMatterMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -72,13 +72,31 @@ function parseFrontMatter(content) {
         metadata[key] = [];
       }
     } else {
-      // 通常の値
-      if (value.startsWith('"') && value.endsWith('"')) {
-        value = value.slice(1, -1);
-      } else if (value.startsWith("'") && value.endsWith("'")) {
+      // 通常の値の処理（改良版）
+      // クォートの除去
+      if ((value.startsWith('"') && value.endsWith('"')) || 
+          (value.startsWith("'") && value.endsWith("'"))) {
         value = value.slice(1, -1);
       }
-      metadata[key] = value;
+      
+      // 画像フィールドの特別処理
+      if (['coverImage', 'image', 'thumbnail', 'hero', 'banner', 'featuredImage'].includes(key)) {
+        // 既にCloudflare URLの場合はそのまま保持
+        if (value.startsWith('https://imagedelivery.net/')) {
+          metadata[key] = value;
+        } else if (value.startsWith('http://') || value.startsWith('https://')) {
+          // その他の外部URLもそのまま保持
+          metadata[key] = value;
+        } else if (value && value !== '') {
+          // ローカルパスの場合は相対パスとして保持（後で統合処理で変換される）
+          metadata[key] = value;
+        } else {
+          // 空の場合は空文字列
+          metadata[key] = '';
+        }
+      } else {
+        metadata[key] = value;
+      }
     }
     
     i++;
@@ -161,6 +179,10 @@ function main() {
     
     if (markdownFiles.length === 0) {
       console.log(`No markdown files found in ${folder} folder`);
+      // 空のJSONファイルを作成
+      const outputPath = path.join(process.cwd(), `${folder}.json`);
+      fs.writeFileSync(outputPath, JSON.stringify([], null, 2), 'utf8');
+      console.log(`Created empty JSON file: ${outputPath}`);
       return;
     }
 

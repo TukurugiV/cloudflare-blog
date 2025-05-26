@@ -1,14 +1,7 @@
-name: Process Markdown Files (Debug版)
+name: Process Markdown Files (統合版)
 
 on:
   push:
-    branches: [ main, master ]
-    paths:
-      - 'posts/**/*.md'
-      - 'events/**/*.md'
-      - 'news/**/*.md'
-      - '**/*.md'
-  pull_request:
     branches: [ main, master ]
     paths:
       - 'posts/**/*.md'
@@ -56,26 +49,6 @@ jobs:
           npm install
         fi
 
-    # デバッグ: 環境情報の確認
-    - name: Debug - Environment Info
-      run: |
-        echo "=== 🔍 環境情報 ==="
-        echo "Node.js version: $(node --version)"
-        echo "npm version: $(npm --version)"
-        echo "Current directory: $(pwd)"
-        echo "Directory contents:"
-        ls -la
-        echo ""
-        echo "=== 📂 ディレクトリ構造 ==="
-        find . -name "*.md" -o -name "*.js" | head -20
-        echo ""
-        echo "=== 🔐 環境変数チェック ==="
-        echo "CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID:+設定済み}"
-        echo "CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN:+設定済み}"
-      env:
-        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
     - name: Check for Markdown changes
       id: check_changes
       run: |
@@ -90,76 +63,34 @@ jobs:
           echo "ℹ️  No Markdown files changed"
         fi
 
-    # デバッグ: 処理対象ファイルの詳細確認
-    - name: Debug - Analyze Markdown files
-      if: steps.check_changes.outputs.markdown_changed == 'true'
-      run: |
-        echo "=== 📋 変更されたMarkdownファイルの詳細 ==="
-        for file in $(git diff --name-only HEAD~1 HEAD | grep -E '\.(md)$'); do
-          if [ -f "$file" ]; then
-            echo "📄 ファイル: $file"
-            echo "   サイズ: $(stat -c%s "$file") bytes"
-            echo "   フロントマター確認:"
-            if head -10 "$file" | grep -q "^---"; then
-              echo "   ✅ フロントマターあり"
-              echo "   画像フィールド:"
-              grep -E "(coverImage|image|thumbnail):" "$file" || echo "   ❌ 画像フィールドなし"
-            else
-              echo "   ❌ フロントマターなし"
-            fi
-            echo "   Markdown画像記法:"
-            grep -E "!\[.*\]\(.*\)" "$file" || echo "   ❌ 画像記法なし"
-            echo "   ローカル画像ファイル確認:"
-            dirname_file=$(dirname "$file")
-            if ls "$dirname_file"/*.{jpg,jpeg,png,gif,webp} 2>/dev/null; then
-              echo "   ✅ 画像ファイルあり"
-              ls "$dirname_file"/*.{jpg,jpeg,png,gif,webp} 2>/dev/null
-            else
-              echo "   ❌ 画像ファイルなし"
-            fi
-            echo ""
-          fi
-        done
-
-    # どのスクリプトを使用するかの確認
-    - name: Debug - Check processing script
-      if: steps.check_changes.outputs.markdown_changed == 'true'
-      run: |
-        echo "=== 🔍 処理スクリプトの確認 ==="
-        if [ -f "imgReplace.js" ]; then
-          echo "✅ imgReplace.js が見つかりました"
-          echo "ファイルサイズ: $(stat -c%s imgReplace.js) bytes"
-          echo "実行権限: $(stat -c%A imgReplace.js)"
-        else
-          echo "❌ imgReplace.js が見つかりません"
-        fi
-        
-        if [ -f "md-cloudflare-processor.js" ]; then
-          echo "✅ md-cloudflare-processor.js が見つかりました"
-          echo "ファイルサイズ: $(stat -c%s md-cloudflare-processor.js) bytes"
-        else
-          echo "❌ md-cloudflare-processor.js が見つかりません"
-        fi
-
-    - name: Process Markdown files
+    - name: Process Markdown files and generate JSON
       if: steps.check_changes.outputs.markdown_changed == 'true'
       env:
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       run: |
-        echo "=== 🚀 Markdown処理を開始 ==="
-        echo "使用するスクリプト: imgReplace.js"
-        echo "実行コマンド: node imgReplace.js -i ./ -r"
+        echo "=== 🚀 統合処理を開始 ==="
+        echo "1. 画像処理とJSON生成を統合実行"
         echo ""
         
-        # 詳細ログ付きで実行
-        if [ -f "imgReplace.js" ]; then
-          node imgReplace.js -i ./ -r
+        # 統合スクリプトを実行
+        if [ -f "integrated-processor.js" ]; then
+          node integrated-processor.js -i ./ -r
         else
-          echo "❌ エラー: imgReplace.js が見つかりません"
-          echo "利用可能なJavaScriptファイル:"
-          find . -name "*.js" -type f
-          exit 1
+          echo "❌ エラー: integrated-processor.js が見つかりません"
+          echo "代替処理: 既存スクリプトを順次実行"
+          
+          # 画像処理
+          if [ -f "imgReplace.js" ]; then
+            echo "📸 画像処理を実行中..."
+            node imgReplace.js -i ./ -r
+          fi
+          
+          # JSON生成
+          if [ -f "genJson.js" ]; then
+            echo "📄 JSON生成を実行中..."
+            node genJson.js
+          fi
         fi
 
     - name: Check for processed changes
@@ -198,6 +129,7 @@ jobs:
         - Uploaded local images to Cloudflare Images
         - Updated image URLs in Markdown files  
         - Generated/updated JSON metadata files
+        - Prevented duplicate image uploads
         
         [skip ci]"
         
@@ -220,6 +152,7 @@ jobs:
             echo "- 🖼️ Local images uploaded to Cloudflare Images" >> $GITHUB_STEP_SUMMARY
             echo "- 🔗 Image URLs updated in Markdown files" >> $GITHUB_STEP_SUMMARY
             echo "- 📄 JSON metadata files generated/updated" >> $GITHUB_STEP_SUMMARY
+            echo "- 🚫 Duplicate uploads prevented" >> $GITHUB_STEP_SUMMARY
           else
             echo "ℹ️ No changes were needed" >> $GITHUB_STEP_SUMMARY
           fi
