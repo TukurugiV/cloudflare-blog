@@ -7,7 +7,8 @@
       "サイトについて"
     ],
     "release": "2025-05-20T19:30:22.650Z",
-    "excerpt": "この記事の簡単な説明"
+    "excerpt": "この記事の簡単な説明",
+    "replacedImages": 0
   },
   {
     "fileName": "markdown-guide",
@@ -19,6 +20,7 @@
     ],
     "release": "2025-05-20T15:00:00.000Z",
     "excerpt": "自分のメモです",
-    "coverImage": ""
+    "coverImage": "",
+    "replacedImages": 0
   }
 ]
