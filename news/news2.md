@@ -3,7 +3,7 @@ title: "news"
 category: ["サイト開設のお知らせ"]
 release: "2025-05-20T19:30:22.650Z"
 excerpt: "サイトを開設したので，このサイトに関するお話を"
-coverImage: "./00.webp"
+coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/699b5aba-3331-4d64-2e62-203983c86d00/newsCover"
 ---
 
 ![](./00.webpk)
