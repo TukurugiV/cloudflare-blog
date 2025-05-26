@@ -6,7 +6,7 @@ excerpt: "サイトを開設したので，このサイトに関するお話を"
 coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/699b5aba-3331-4d64-2e62-203983c86d00/newsCover"
 ---
 
-![](./00.webp)
+![](https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/0ef2730a-642e-4f6a-22b8-89b52d540d00/eventCover)
 
 ## 自分のサイトを開設しました
 詳しいことは [サイトを始めてみた話](https://tukurugi.uk/blogs/00blog-open/) に記載していますが，なんやかんやあってサイトを開設してみました．
