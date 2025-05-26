@@ -1,23 +1,2 @@
 [
-  {
-    "fileName": "event",
-    "title": "event1",
-    "date": "2025-05-25T19:00:00+09:00",
-    "description": "description",
-    "category": [
-      "test"
-    ],
-    "location": "YouTube Live",
-    "url": "https://www.youtube.com/@Tukurugi_V",
-    "coverImage": "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/d50b300c-9ea8-4d11-f33c-539f0e72eb00/large"
-  },
-  {
-    "fileName": "event2-20250523",
-    "title": "event2",
-    "date": "2025-05-23T11:00:00.000Z",
-    "description": "aaaaaa",
-    "category": [],
-    "location": "aaaaaaaaaaaa",
-    "url": ""
-  }
 ]
