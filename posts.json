@@ -1,20 +1,10 @@
 [
   {
-    "fileName": "helloworld",
-    "title": "自己紹介",
-    "category": [
-      "自己紹介"
-    ],
-    "release": "2025-05-20T12:00:00Z",
-    "excerpt": "HPを作ったのでとりあえず自己紹介を",
-    "coverImage": "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/-2024-03-05-130918-1747749012050/public"
-  },
-  {
-    "fileName": "helloworldtest",
+    "fileName": "00blog-open",
     "title": "test",
     "category": [
-      "カテゴリー1",
-      "カテゴリー2"
+      "自己紹介",
+      "サイトについて"
     ],
     "release": "2025-05-20T19:30:22.650Z",
     "excerpt": "この記事の簡単な説明"
@@ -28,7 +18,7 @@
       "技術"
     ],
     "release": "2025-05-20T15:00:00.000Z",
-    "excerpt": "このブログで使用できるすべての拡張Markdown記法の使い方を解説します",
-    "coverImage": "/images/markdown-complete-guide.jpg"
+    "excerpt": "自分のメモです",
+    "coverImage": ""
   }
 ]
