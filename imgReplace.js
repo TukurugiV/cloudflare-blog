@@ -74,14 +74,19 @@ if (!fs.existsSync(inputPath)) {
   process.exit(1);
 }
 
-// Cloudflare Images API設定
-const {CLOUDFLARE_ACCOUNT_ID} = process.env || '';
-const {CLOUDFLARE_API_TOKEN} = process.env || '';
+// Cloudflare Images API設定 - 修正版
+const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+
+// デバッグログを追加
+console.log('🔍 環境変数チェック');
+console.log(`CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID ? 'OK' : 'NG'}`);
+console.log(`CLOUDFLARE_API_TOKEN: ${CLOUDFLARE_API_TOKEN ? 'OK' : 'NG'}`);
 
 if (!CLOUDFLARE_ACCOUNT_ID || !CLOUDFLARE_API_TOKEN) {
   console.error('エラー: CloudflareのアカウントIDとAPIトークンが必要です。環境変数を設定してください：');
-  console.error('  export CLOUDFLARE_ACCOUNT_ID="あなたのアカウントID"');
-  console.error('  export CLOUDFLARE_API_TOKEN="あなたのAPIトークン"');
+  console.error('  $env:CLOUDFLARE_ACCOUNT_ID="あなたのアカウントID"');
+  console.error('  $env:CLOUDFLARE_API_TOKEN="あなたのAPIトークン"');
   process.exit(1);
 }
 
@@ -167,29 +172,33 @@ function getFilesToProcess(inputPath, pattern, recursive) {
   return [];
 }
 
-// Markdownファイルを処理する関数
+// Markdownファイルを処理する関数（フロントマター対応版）
 async function processMarkdownFile(inputFilePath, outputFilePath) {
-  console.log(`処理を開始: ${inputFilePath}`);
+  console.log(`🔍 処理を開始: ${inputFilePath}`);
   
   // Markdownファイルを読み込む
   const markdownContent = fs.readFileSync(inputFilePath, 'utf8');
   const markdownDir = path.dirname(inputFilePath);
   
-  // 画像パターンを検出するための正規表現
-  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
-  
   // 置換処理のためにPromiseを保持する配列
   const replacementPromises = [];
   const replacements = [];
   
-  // すべての画像パターンを見つける
-  let match;
-  while ((match = imageRegex.exec(markdownContent)) !== null) {
-    const [fullMatch, altText, imagePath] = match;
+  // 1. フロントマター内の画像フィールドを処理
+  console.log(`🔍 フロントマター内の画像を検索中...`);
+  
+  // フロントマター内の画像フィールドを検出する正規表現
+  const frontMatterImageRegex = /(coverImage|image|thumbnail|hero|banner|featuredImage):\s*["']([^"']+)["']/gi;
+  
+  let frontMatterMatch;
+  while ((frontMatterMatch = frontMatterImageRegex.exec(markdownContent)) !== null) {
+    const [fullMatch, fieldName, imagePath] = frontMatterMatch;
+    
+    console.log(`🎯 フロントマター画像を発見: ${fieldName}: ${imagePath}`);
     
     // 外部URLの場合はスキップ
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-      console.log(`既にURLのため処理をスキップ: ${imagePath}`);
+      console.log(`⏭️  既にURLのため処理をスキップ: ${imagePath}`);
       continue;
     }
     
@@ -200,36 +209,104 @@ async function processMarkdownFile(inputFilePath, outputFilePath) {
     
     // ファイルが存在するか確認
     if (!fs.existsSync(absoluteImagePath)) {
-      console.warn(`警告: 画像ファイルが見つかりません: ${absoluteImagePath}`);
+      console.warn(`⚠️  警告: 画像ファイルが見つかりません: ${absoluteImagePath}`);
       continue;
     }
     
-    console.log(`画像を処理中: ${absoluteImagePath}`);
+    console.log(`📸 フロントマター画像を処理中: ${absoluteImagePath}`);
     
     // アップロード処理のPromiseを作成
     const uploadPromise = uploadImageToCloudflare(absoluteImagePath)
       .then(cloudflareUrl => {
-        console.log(`アップロード成功: ${absoluteImagePath} → ${cloudflareUrl}`);
+        console.log(`🎉 フロントマターアップロード成功: ${absoluteImagePath} → ${cloudflareUrl}`);
+        replacements.push({
+          original: fullMatch,
+          replacement: `${fieldName}: "${cloudflareUrl}"`
+        });
+      })
+      .catch(error => {
+        console.error(`💥 フロントマター画像 ${absoluteImagePath} の処理に失敗:`, error);
+      });
+    
+    replacementPromises.push(uploadPromise);
+  }
+  
+  // 2. Markdown記法の画像を処理（元の処理）  
+  console.log(`🔍 Markdown記法の画像を検索中...`);
+  
+  // 画像パターンを検出するための正規表現
+  const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+  
+  // すべての画像パターンを見つける
+  let match;
+  while ((match = imageRegex.exec(markdownContent)) !== null) {
+    const [fullMatch, altText, imagePath] = match;
+    
+    console.log(`🎯 Markdown画像を発見: ![${altText}](${imagePath})`);
+    
+    // 外部URLの場合はスキップ
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      console.log(`⏭️  既にURLのため処理をスキップ: ${imagePath}`);
+      continue;
+    }
+    
+    // 相対パスを絶対パスに変換
+    const absoluteImagePath = path.isAbsolute(imagePath) 
+      ? imagePath 
+      : path.resolve(markdownDir, imagePath);
+    
+    // ファイルが存在するか確認
+    if (!fs.existsSync(absoluteImagePath)) {
+      console.warn(`⚠️  警告: 画像ファイルが見つかりません: ${absoluteImagePath}`);
+      continue;
+    }
+    
+    console.log(`📸 Markdown画像を処理中: ${absoluteImagePath}`);
+    
+    // アップロード処理のPromiseを作成
+    const uploadPromise = uploadImageToCloudflare(absoluteImagePath)
+      .then(cloudflareUrl => {
+        console.log(`🎉 Markdownアップロード成功: ${absoluteImagePath} → ${cloudflareUrl}`);
         replacements.push({
           original: fullMatch,
           replacement: `![${altText}](${cloudflareUrl})`
         });
       })
       .catch(error => {
-        console.error(`画像 ${absoluteImagePath} の処理に失敗:`, error);
+        console.error(`💥 Markdown画像 ${absoluteImagePath} の処理に失敗:`, error);
       });
     
     replacementPromises.push(uploadPromise);
   }
   
+  console.log(`📊 処理対象となる画像の総数: ${replacementPromises.length}`);
+  
+  if (replacementPromises.length === 0) {
+    console.log(`ℹ️  処理対象の画像がありませんでした`);
+    return 0;
+  }
+  
   // すべてのアップロードが完了するのを待つ
+  console.log(`⏳ 画像アップロード処理を実行中...`);
   await Promise.all(replacementPromises);
+  
+  console.log(`📊 実際に置換される項目数: ${replacements.length}`);
   
   // 置換を実行
   let updatedContent = markdownContent;
-  replacements.forEach(({ original, replacement }) => {
+  replacements.forEach(({ original, replacement }, index) => {
+    console.log(`🔄 置換 ${index + 1}: 
+  元: ${original}
+  新: ${replacement}`);
     updatedContent = updatedContent.replace(original, replacement);
   });
+  
+  // 変更があったかチェック
+  if (updatedContent === markdownContent) {
+    console.log(`ℹ️  ファイル内容に変更はありませんでした`);
+  } else {
+    console.log(`✅ ファイル内容が更新されました`);
+  }
   
   // 出力ディレクトリが存在しない場合は作成
   const outputDir = path.dirname(outputFilePath);
@@ -241,9 +318,9 @@ async function processMarkdownFile(inputFilePath, outputFilePath) {
   fs.writeFileSync(outputFilePath, updatedContent, 'utf8');
   
   if (inputFilePath === outputFilePath) {
-    console.log(`処理完了. 入力ファイルを上書き: ${outputFilePath}`);
+    console.log(`💾 処理完了. 入力ファイルを上書き: ${outputFilePath}`);
   } else {
-    console.log(`処理完了. 更新されたMarkdownを保存: ${outputFilePath}`);
+    console.log(`💾 処理完了. 更新されたMarkdownを保存: ${outputFilePath}`);
   }
   
   return replacements.length;
@@ -260,7 +337,7 @@ async function main() {
       return;
     }
     
-    console.log(`処理対象ファイル数: ${filesToProcess.length}`);
+    console.log(`📋 処理対象ファイル数: ${filesToProcess.length}`);
     
     let totalImagesReplaced = 0;
     
@@ -287,7 +364,7 @@ async function main() {
       totalImagesReplaced += replacedCount;
     }
     
-    console.log(`処理が完了しました。置換した画像の総数: ${totalImagesReplaced}`);
+    console.log(`🎊 処理が完了しました。置換した画像の総数: ${totalImagesReplaced}`);
     
   } catch (error) {
     console.error('エラーが発生しました:', error);
