@@ -3,6 +3,7 @@ title: "サイトを開設したよ"
 category: ["自己紹介", "サイトについて"]
 release: "2025-05-20T19:30:22.650Z"
 excerpt: "サイトを作ったのでブログを初投稿"
+coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/9dbcbf3a-5b8b-49e9-2965-837a494c0800/eventCover"
 ---
 
 # 記事のタイトル
