@@ -3,7 +3,7 @@ title: "サイトを開設してみたというお話"
 category: ["サイト開設のお知らせ"]
 release: "2025-05-20T19:30:22.650Z"
 excerpt: "サイトを開設したので，このサイトに関するお話を"
-coverImage: "./00.webp"
+coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/e71dcabc-43c0-4f51-1b50-56f8ae2e6600/siteMapLink"
 ---
 
 
