@@ -1,7 +1,7 @@
 ---
 title: "サイトを開設してみたというお話"
 category: ["サイト開設のお知らせ"]
-release: "2025-05-20T19:30:22.650Z"
+release: "2025-07-28T22:00:00.000Z"
 excerpt: "サイトを開設したので，このサイトに関するお話を"
 coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/e71dcabc-43c0-4f51-1b50-56f8ae2e6600/siteMapLink"
 ---
@@ -27,7 +27,7 @@ coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/e71dcabc-43c0-4f51
 
 Twitterへ書くには長すぎたり，あまりにもくだらなさすぎたり，そういうものを書くことがあれば，技術的な発信に使ったり，雑考を残してみたり，とにかく文章を書きたいときに使っていきます．
 
-システムの性質上読み込みが遅くなることがありますが，許してください．
+技術系のブログとか書くことが多いかも
 
 ### [最新情報](https://tukurugi.uk/news/)
 Twitterにも書くけど，少しサイトに情報を残しておきたいことを書いておきます．
