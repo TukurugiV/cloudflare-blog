@@ -1,7 +1,7 @@
 ---
 title: "サイトを開設してみたというお話"
 category: ["サイト開設のお知らせ"]
-release: "2025-07-28T22:00:00.000Z"
+release: "2025-07-28:22:00:00"
 excerpt: "サイトを開設したので，このサイトに関するお話を"
 coverImage: "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/e71dcabc-43c0-4f51-1b50-56f8ae2e6600/siteMapLink"
 ---
