@@ -1,14 +1,13 @@
 [
   {
     "fileName": "test-event-20250729",
-    "title": "test\\event",
-    "date": "2025-07-29T11:00:00.000Z",
+    "title": "test\u001bvent",
     "description": "description",
+    "location": "",
     "category": [
       "配信"
     ],
-    "location": "",
-    "url": "",
-    "replacedImages": 0
+    "excerpt": "test\\event\r hello\r イベント詳細\r 日時: 2025/7/29 20:00:00\r hello",
+    "date": "2025-07-29T11:00:00.000Z"
   }
 ]
