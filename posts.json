@@ -2,35 +2,35 @@
   {
     "fileName": "00blog-open",
     "title": "サイトを開設したよ",
-    "excerpt": "サイトを作ったのでブログを初投稿",
-    "coverImage": "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/f9bcfda5-c99e-4665-cf84-4b0cf5b4d600/public",
     "category": [
       "自己紹介",
       "サイトについて"
     ],
-    "release": "2025-08-01:12:00:00"
+    "release": "2025-07-28:22:00:00",
+    "excerpt": "サイトを作ったのでブログを初投稿",
+    "coverImage": "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/f9bcfda5-c99e-4665-cf84-4b0cf5b4d600/public"
   },
   {
     "fileName": "01blog-test",
     "title": "サイトを開設したよ",
-    "excerpt": "サイトを作ったのでブログを初投稿",
-    "coverImage": "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/f9bcfda5-c99e-4665-cf84-4b0cf5b4d600/public",
     "category": [
       "自己紹介",
       "サイトについて"
     ],
-    "release": "2025-08-01:12:00:00"
+    "release": "2025-08-01:12:00:00",
+    "excerpt": "サイトを作ったのでブログを初投稿",
+    "coverImage": "https://imagedelivery.net/3-0TnxhaMhG-JZpRRgtqfg/f9bcfda5-c99e-4665-cf84-4b0cf5b4d600/public"
   },
   {
     "fileName": "markdown-guide",
     "title": "拡張Markdown記法の総合ガイド",
-    "excerpt": "自分のメモです",
-    "coverImage": "",
     "category": [
       "マークダウン",
       "チュートリアル",
       "技術"
     ],
-    "release": "2025-05-20T15:00:00.000Z"
+    "release": "2025-05-20T15:00:00.000Z",
+    "excerpt": "自分のメモです",
+    "coverImage": ""
   }
 ]
